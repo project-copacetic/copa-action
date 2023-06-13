@@ -69,6 +69,7 @@ jobs:
             image: ${{ matrix.images }}
             image-report: 'report.json'
             patched-tag: '-patched'
+            buildkit-version: 'v0.11.6'
 
         - name: Login to Docker Hub
           if: steps.copa.conclusion == 'success'

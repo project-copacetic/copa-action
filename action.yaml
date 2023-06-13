@@ -10,6 +10,8 @@ inputs:
   patched-tag:
     description: 'The patched image tag to append to the original tag'
     required: true
+  buildkit-version:
+    description: "Buildkit version to use with Copa"
 outputs:
   patched-image:
     description: 'Image reference of patched image'
@@ -24,7 +26,7 @@ runs:
     - name: docker run buildkitd
       shell: bash
       run: |
-        docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:latest --addr tcp://0.0.0.0:8888
+        docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:${{ inputs.buildkit-version }} --addr tcp://0.0.0.0:8888
     - name: docker run copa-action
       shell: bash
       run : |
