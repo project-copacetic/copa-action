@@ -1,1 +1,32 @@
+name: 'Copa Action'
+description: 'Patch Vulnerable Images'
+inputs:
+  image:
+    description: 'The image reference to patch'
+    required: true
+  image-report:
+    description: 'The trivy json report of the image to patch'
+    required: true
+  patched-tag:
+    description: 'The patched image tag to append to the original tag'
+    required: true
+outputs:
+  patched-image:
+    description: 'Image reference of patched image'
+    value: ${{ steps.copa-action.outputs.patched-image }}
+runs:
+  using: "composite"
+  steps: 
     - name: docker build copa-action
+      shell: bash
+      run: |
+        docker build -t copa-action .
+    - name: docker run buildkitd
+      shell: bash
+      run: |
+        docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:latest --addr tcp://0.0.0.0:8888
+    - name: docker run copa-action
+      shell: bash
+      run : |
+        docker run --net=host --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock copa-action ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }} tcp://0.0.0.0:8888
+      id: copa-action
