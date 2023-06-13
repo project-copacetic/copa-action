@@ -35,17 +35,17 @@ jobs:
           fail-fast: false
           matrix:
             # provide relevant list of images to scan on each run
-            images: ['docker.io/user/nginx:1.21.6', 'docker.io/user/opa:0.46.0', 'docker.io/user/hello-world:latest']
+            images: ['docker.io/library/nginx:1.21.6', 'docker.io/openpolicyagent/opa:0.46.0', 'docker.io/library/hello-world:latest']
 
         steps:
         - name: Checkout repository
-          uses: actions/checkout@v2
+          uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
 
         - name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@v2
+          uses: docker/setup-buildx-action@ecf95283f03858871ff00b787d79c419715afc34
 
         - name: Generate Trivy Report
-          uses: aquasecurity/trivy-action@master
+          uses: aquasecurity/trivy-action@465a07811f14bebb1938fbed4728c6a1ff8901fc
           with:
             scan-type: 'image'
             format: 'json'
@@ -64,7 +64,7 @@ jobs:
         - name: Copa Action
           if: steps.vuln_cout.outputs.vuln_count != '0'
           id: copa
-          uses: copacetic/copa-action@v0.1.0
+          uses: project-copacetic/copa-action@v0.1.0
           with:
             image: ${{ matrix.images }}
             image-report: 'report.json'
