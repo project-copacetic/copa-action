@@ -74,7 +74,7 @@ jobs:
         - name: Login to Docker Hub
           if: steps.copa.conclusion == 'success'
           id: login
-          uses: docker/login-action@v2
+          uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc
           with:
             username: 'user'
             password: ${{ secrets.DOCKERHUB_TOKEN }}
