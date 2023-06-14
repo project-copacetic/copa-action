@@ -59,7 +59,7 @@ jobs:
           run: |
             report_file="report.json"
             vuln_count=$(jq '.Results | length' "$report_file")
-            echo "::set-output name=vuln_count::$vuln_count"
+            echo "vuln_count=$vuln_count" >> $GITHUB_OUTPUT
 
         - name: Copa Action
           if: steps.vuln_cout.outputs.vuln_count != '0'
