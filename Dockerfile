@@ -12,8 +12,8 @@ COPY *.json /data/
 VOLUME /data
 
 # Install required packages
-RUN apt update && \
-    apt install -y wget tar sudo ca-certificates gnupg curl --no-install-recommends
+RUN apt-get update && \
+    apt-get install -y wget tar sudo ca-certificates gnupg curl --no-install-recommends
 
 # Install Copa
 RUN wget -q https://github.com/project-copacetic/copacetic/releases/download/v0.2.0/copa_0.2.0_linux_amd64.tar.gz && \
@@ -32,8 +32,8 @@ RUN echo \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 # Install Docker
-RUN apt update && \
-    apt install -y docker-ce docker-ce-cli containerd.io --no-install-recommends
+RUN apt-get update && \
+    apt-get install -y docker-ce docker-ce-cli containerd.io --no-install-recommends
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
 ENTRYPOINT ["/entrypoint.sh"]
