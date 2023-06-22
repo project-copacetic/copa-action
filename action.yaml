@@ -28,7 +28,7 @@ runs:
       run: |
         docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:${{ inputs.buildkit-version }} --addr tcp://0.0.0.0:8888
     - name: docker run copa-action
+      id: copa-action
       shell: bash
       run : |
-        docker run --net=host --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock copa-action ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }} tcp://0.0.0.0:8888
-      id: copa-action
+        docker run --net=host --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action copa-action ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }} tcp://0.0.0.0:8888
