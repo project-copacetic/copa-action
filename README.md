@@ -39,7 +39,7 @@ jobs:
 
         steps:
         - name: Checkout repository
-          uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
+          uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v0.1.0
           with:
             repository: project-copacetic/copa-action
             ref: main
