@@ -13,27 +13,22 @@ VOLUME /data
 
 # Install required packages
 RUN apt-get update && \
-    apt-get install -y wget tar sudo ca-certificates gnupg curl --no-install-recommends
+    apt-get install -y wget tar sudo ca-certificates gnupg curl --no-install-recommends && \
+    # Import Docker GPG key
+    sudo install -m 0755 -d /etc/apt/keyrings && \
+    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
+    sudo chmod a+r /etc/apt/keyrings/docker.gpg && \
+    # Add the Docker repository with the correct key ID
+    echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+    # Install Docker
+    apt-get update && \
+    apt-get install -y docker-ce docker-ce-cli containerd.io --no-install-recommends
 
 # Install Copa
 RUN wget -q https://github.com/project-copacetic/copacetic/releases/download/v0.2.0/copa_0.2.0_linux_amd64.tar.gz && \
     tar -zxvf copa_0.2.0_linux_amd64.tar.gz && \
     cp copa /usr/local/bin/
-
-# Import Docker GPG key
-RUN sudo install -m 0755 -d /etc/apt/keyrings && \
-    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
-    sudo chmod a+r /etc/apt/keyrings/docker.gpg 
-
-# Add the Docker repository with the correct key ID
-RUN echo \
-  "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
-  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-# Install Docker
-RUN apt-get update && \
-    apt-get install -y docker-ce docker-ce-cli containerd.io --no-install-recommends
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
 ENTRYPOINT ["/entrypoint.sh"]
