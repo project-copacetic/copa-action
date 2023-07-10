@@ -16,7 +16,7 @@ RUN apt-get update && \
     apt-get install -y tar ca-certificates gnupg curl --no-install-recommends && \
     # Import Docker GPG key
     install -m 0755 -d /etc/apt/keyrings && \
-    curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
+    curl --retry 5 -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
     chmod a+r /etc/apt/keyrings/docker.gpg && \
     # Add the Docker repository with the correct key ID
     echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
@@ -26,7 +26,7 @@ RUN apt-get update && \
     apt-get install -y docker-ce docker-ce-cli containerd.io --no-install-recommends
 
 # Install Copa
-RUN curl -fsSL -o copa.tar.gz https://github.com/project-copacetic/copacetic/releases/download/v0.2.0/copa_0.2.0_linux_amd64.tar.gz && \
+RUN curl --retry 5 -fsSL -o copa.tar.gz https://github.com/project-copacetic/copacetic/releases/download/v0.2.0/copa_0.2.0_linux_amd64.tar.gz && \
     tar -zxvf copa.tar.gz && \
     cp copa /usr/local/bin/
 
