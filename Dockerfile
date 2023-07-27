@@ -2,6 +2,9 @@ FROM debian:12-slim
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+# define copa_version arg with default value of 0.2.0
+ARG copa_version=0.2.0
+
 # Copies your code file from your action repository to the filesystem path `/` of the container
 COPY entrypoint.sh /entrypoint.sh
 
@@ -26,7 +29,7 @@ RUN apt-get update && \
     apt-get install -y docker-ce docker-ce-cli containerd.io --no-install-recommends
 
 # Install Copa
-RUN curl --retry 5 -fsSL -o copa.tar.gz https://github.com/project-copacetic/copacetic/releases/download/v0.2.0/copa_0.2.0_linux_amd64.tar.gz && \
+RUN curl --retry 5 -fsSL -o copa.tar.gz https://github.com/project-copacetic/copacetic/releases/download/v${copa_version}/copa_${copa_version}_linux_amd64.tar.gz && \
     tar -zxvf copa.tar.gz && \
     cp copa /usr/local/bin/
 
