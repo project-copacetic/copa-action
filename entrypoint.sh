@@ -12,7 +12,7 @@ old_tag=$(echo "$image" | cut -d':' -f2)
 new_tag="$old_tag$patched_tag"
 
 # run copa to patch image
-if copa patch -i "$image" -r /data/"$report" -t "$new_tag" --addr tcp://0.0.0.0:8888;
+if copa patch -i "$image" -r ./data/"$report" -t "$new_tag" --addr tcp://0.0.0.0:8888;
 then
     patched_image="$image_no_tag:$new_tag"
     echo "patched-image=$patched_image" >> "$GITHUB_OUTPUT"
