@@ -2,8 +2,8 @@ FROM debian:12-slim
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# define copa_version arg with default value of 0.2.0
-ARG copa_version=0.2.0
+# define copa_version arg with default value of 0.3.0
+ARG copa_version=0.3.0
 
 # Copies your code file from your action repository to the filesystem path `/` of the container
 COPY entrypoint.sh /entrypoint.sh
