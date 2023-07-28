@@ -1,0 +1,158 @@
+{
+  "SchemaVersion": 2,
+  "ArtifactName": "mcr.microsoft.com/oss/nginx/nginx:1.21.6-patched",
+  "ArtifactType": "container_image",
+  "Metadata": {
+    "OS": {
+      "Family": "debian",
+      "Name": "11.2"
+    },
+    "ImageID": "sha256:77a7630a38cf0a9f9c84198ca4033cc9b1ec9ca36196364145dd493f9c8f6e69",
+    "DiffIDs": [
+      "sha256:2edcec3590a4ec7f40cf0743c15d78fb39d8326bc029073b41ef9727da6c851f",
+      "sha256:f1bc41b91c8447e1df3ad72a49a2a7ca4f50b998af86b350c0cc3860530bca2e",
+      "sha256:e5352aade86629888f15070d3704ed68235fee11f24d1586cfe8e6f6e90261c0",
+      "sha256:77e468623a7efa2fb4647033723d25ebd8ca2fa0dcde2a3cb96498d96604e8e2",
+      "sha256:dcd52199de9dcd744f0bd6f1a33af8c31124b9d5c541f185be2ba607151e4123",
+      "sha256:fa77616c13581b312815d7c31e40a2ed36ce6ffcaba999d6914daf781795c4ba",
+      "sha256:748a82e11bd019967031d9f180ad6ab81a27c891b1722afbd1a5e06fc19afaec"
+    ],
+    "RepoTags": [
+      "mcr.microsoft.com/oss/nginx/nginx:1.21.6-patched"
+    ],
+    "ImageConfig": {
+      "architecture": "amd64",
+      "created": "2022-01-26T00:04:39.951747709Z",
+      "history": [
+        {
+          "created": "2021-12-21T01:22:43Z",
+          "created_by": "/bin/sh -c #(nop) ADD file:09675d11695f65c55efdc393ff0cd32f30194cd7d0fbef4631eebfed4414ac97 in / "
+        },
+        {
+          "created": "2021-12-21T01:22:43Z",
+          "created_by": "/bin/sh -c #(nop)  CMD [\"bash\"]",
+          "empty_layer": true
+        },
+        {
+          "created": "2022-01-26T00:04:39Z",
+          "created_by": "LABEL maintainer=NGINX Docker Maintainers \u003cdocker-maint@nginx.com\u003e",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2022-01-26T00:04:39Z",
+          "created_by": "ENV NGINX_VERSION=1.20.2",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2022-01-26T00:04:39Z",
+          "created_by": "ENV NJS_VERSION=0.7.0",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2022-01-26T00:04:39Z",
+          "created_by": "ENV PKG_RELEASE=1~bullseye",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2022-01-26T00:04:39Z",
+          "created_by": "RUN /bin/sh -c set -x     \u0026\u0026 addgroup --system --gid 101 nginx     \u0026\u0026 adduser --system --disabled-login --ingroup nginx --no-create-home --home /nonexistent --gecos \"nginx user\" --shell /bin/false --uid 101 nginx     \u0026\u0026 apt-get update     \u0026\u0026 apt-get install --no-install-recommends --no-install-suggests -y gnupg1 ca-certificates     \u0026\u0026     NGINX_GPGKEY=573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62;     found='';     for server in         hkp://keyserver.ubuntu.com:80         pgp.mit.edu     ; do         echo \"Fetching GPG key $NGINX_GPGKEY from $server\";         apt-key adv --keyserver \"$server\" --keyserver-options timeout=10 --recv-keys \"$NGINX_GPGKEY\" \u0026\u0026 found=yes \u0026\u0026 break;     done;     test -z \"$found\" \u0026\u0026 echo \u003e\u00262 \"error: failed to fetch GPG key $NGINX_GPGKEY\" \u0026\u0026 exit 1;     apt-get remove --purge --auto-remove -y gnupg1 \u0026\u0026 rm -rf /var/lib/apt/lists/*     \u0026\u0026 dpkgArch=\"$(dpkg --print-architecture)\"     \u0026\u0026 nginxPackages=\"         nginx=${NGINX_VERSION}-${PKG_RELEASE}         nginx-module-xslt=${NGINX_VERSION}-${PKG_RELEASE}         nginx-module-geoip=${NGINX_VERSION}-${PKG_RELEASE}         nginx-module-image-filter=${NGINX_VERSION}-${PKG_RELEASE}         nginx-module-njs=${NGINX_VERSION}+${NJS_VERSION}-${PKG_RELEASE}     \"     \u0026\u0026 case \"$dpkgArch\" in         amd64|arm64)             echo \"deb https://nginx.org/packages/debian/ bullseye nginx\" \u003e\u003e /etc/apt/sources.list.d/nginx.list             \u0026\u0026 apt-get update             ;;         *)             echo \"deb-src https://nginx.org/packages/debian/ bullseye nginx\" \u003e\u003e /etc/apt/sources.list.d/nginx.list                         \u0026\u0026 tempDir=\"$(mktemp -d)\"             \u0026\u0026 chmod 777 \"$tempDir\"                         \u0026\u0026 savedAptMark=\"$(apt-mark showmanual)\"                         \u0026\u0026 apt-get update             \u0026\u0026 apt-get build-dep -y $nginxPackages             \u0026\u0026 (                 cd \"$tempDir\"                 \u0026\u0026 DEB_BUILD_OPTIONS=\"nocheck parallel=$(nproc)\"                     apt-get source --compile $nginxPackages             )                         \u0026\u0026 apt-mark showmanual | xargs apt-mark auto \u003e /dev/null             \u0026\u0026 { [ -z \"$savedAptMark\" ] || apt-mark manual $savedAptMark; }                         \u0026\u0026 ls -lAFh \"$tempDir\"             \u0026\u0026 ( cd \"$tempDir\" \u0026\u0026 dpkg-scanpackages . \u003e Packages )             \u0026\u0026 grep '^Package: ' \"$tempDir/Packages\"             \u0026\u0026 echo \"deb [ trusted=yes ] file://$tempDir ./\" \u003e /etc/apt/sources.list.d/temp.list             \u0026\u0026 apt-get -o Acquire::GzipIndexes=false update             ;;     esac         \u0026\u0026 apt-get install --no-install-recommends --no-install-suggests -y                         $nginxPackages                         gettext-base                         curl     \u0026\u0026 apt-get remove --purge --auto-remove -y \u0026\u0026 rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/nginx.list         \u0026\u0026 if [ -n \"$tempDir\" ]; then         apt-get purge -y --auto-remove         \u0026\u0026 rm -rf \"$tempDir\" /etc/apt/sources.list.d/temp.list;     fi     \u0026\u0026 ln -sf /dev/stdout /var/log/nginx/access.log     \u0026\u0026 ln -sf /dev/stderr /var/log/nginx/error.log     \u0026\u0026 mkdir /docker-entrypoint.d # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2022-01-26T00:04:39Z",
+          "created_by": "COPY docker-entrypoint.sh / # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2022-01-26T00:04:39Z",
+          "created_by": "COPY 10-listen-on-ipv6-by-default.sh /docker-entrypoint.d # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2022-01-26T00:04:39Z",
+          "created_by": "COPY 20-envsubst-on-templates.sh /docker-entrypoint.d # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2022-01-26T00:04:39Z",
+          "created_by": "COPY 30-tune-worker-processes.sh /docker-entrypoint.d # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2022-01-26T00:04:39Z",
+          "created_by": "ENTRYPOINT [\"/docker-entrypoint.sh\"]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2022-01-26T00:04:39Z",
+          "created_by": "EXPOSE map[80/tcp:{}]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2022-01-26T00:04:39Z",
+          "created_by": "STOPSIGNAL SIGQUIT",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2022-01-26T00:04:39Z",
+          "created_by": "CMD [\"nginx\" \"-g\" \"daemon off;\"]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2023-07-27T21:31:36Z",
+          "created_by": "mount / from exec sh -c apt install --no-install-recommends --allow-change-held-packages -y libxslt1.1 curl libcurl4 libsasl2-modules-db libsmartcols1 libssl1.1 libtasn1-6 libtirpc-common libtirpc3 libx11-6 mount ncurses-bin libgnutls30 libgssapi-krb5-2 libkrb5support0 libtinfo6 libwebp6 ncurses-base libexpat1 libx11-data libxml2 gzip libfreetype6 liblzma5 libsasl2-2 libc-bin libc6 libk5crypto3 libldap-2.4-2 libtiff5 libudev1 bsdutils dpkg libkrb5-3 libmount1 libpcre2-8-0 libsystemd0 libuuid1 openssl util-linux zlib1g gpgv libblkid1 libxpm4 \u0026\u0026 apt clean -y",
+          "comment": "buildkit.exporter.image.v0"
+        }
+      ],
+      "os": "linux",
+      "rootfs": {
+        "type": "layers",
+        "diff_ids": [
+          "sha256:2edcec3590a4ec7f40cf0743c15d78fb39d8326bc029073b41ef9727da6c851f",
+          "sha256:f1bc41b91c8447e1df3ad72a49a2a7ca4f50b998af86b350c0cc3860530bca2e",
+          "sha256:e5352aade86629888f15070d3704ed68235fee11f24d1586cfe8e6f6e90261c0",
+          "sha256:77e468623a7efa2fb4647033723d25ebd8ca2fa0dcde2a3cb96498d96604e8e2",
+          "sha256:dcd52199de9dcd744f0bd6f1a33af8c31124b9d5c541f185be2ba607151e4123",
+          "sha256:fa77616c13581b312815d7c31e40a2ed36ce6ffcaba999d6914daf781795c4ba",
+          "sha256:748a82e11bd019967031d9f180ad6ab81a27c891b1722afbd1a5e06fc19afaec"
+        ]
+      },
+      "config": {
+        "Cmd": [
+          "nginx",
+          "-g",
+          "daemon off;"
+        ],
+        "Entrypoint": [
+          "/docker-entrypoint.sh"
+        ],
+        "Env": [
+          "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+          "NGINX_VERSION=1.20.2",
+          "NJS_VERSION=0.7.0",
+          "PKG_RELEASE=1~bullseye"
+        ],
+        "Labels": {
+          "maintainer": "NGINX Docker Maintainers \u003cdocker-maint@nginx.com\u003e"
+        },
+        "ArgsEscaped": true,
+        "StopSignal": "SIGQUIT"
+      }
+    }
+  },
+  "Results": [
+    {
+      "Target": "mcr.microsoft.com/oss/nginx/nginx:1.21.6-patched (debian 11.2)",
+      "Class": "os-pkgs",
+      "Type": "debian"
+    }
+  ]
+}
