@@ -73,7 +73,6 @@ jobs:
             image-report: 'report.json'
             patched-tag: '-patched'
             buildkit-version: 'v0.11.6'
-            copa-version: '0.3.0'
 
         - name: Login to Docker Hub
           if: steps.copa.conclusion == 'success'

@@ -2,8 +2,8 @@ FROM debian:12-slim
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# define copa_version arg with default value of 0.3.0
-ARG copa_version=0.3.0
+# Get copa_version arg
+ARG copa_version
 
 # Copies your code file from your action repository to the filesystem path `/` of the container
 COPY entrypoint.sh /entrypoint.sh
@@ -16,7 +16,7 @@ VOLUME /data
 
 # Install required packages
 RUN apt-get update && \
-    apt-get install -y tar ca-certificates gnupg curl --no-install-recommends && \
+    apt-get install -y tar ca-certificates gnupg curl jq --no-install-recommends && \
     # Import Docker GPG key
     install -m 0755 -d /etc/apt/keyrings && \
     curl --retry 5 -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \

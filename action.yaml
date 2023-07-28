@@ -1,9 +1,6 @@
 name: 'Copa Action'
 description: 'Patch Vulnerable Images'
 inputs:
-  copa-version:
-    description: 'The version of Copa to use'
-    required: true
   image:
     description: 'The image reference to patch'
     required: true
@@ -25,7 +22,9 @@ runs:
     - name: docker build copa-action
       shell: bash
       run: |
-        docker build --build-arg copa_version=${{ inputs.copa-version }} -t copa-action .
+        latest_tag=$(curl -s "https://api.github.com/repos/project-copacetic/copacetic/releases/latest" | jq -r '.tag_name') &&\
+        latest_version="${latest:1}" &&\
+        docker build --build-arg copa_version=${latest_version} -t copa-action .
     - name: docker run buildkitd
       shell: bash
       run: |
