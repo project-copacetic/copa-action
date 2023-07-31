@@ -1,0 +1,33 @@
+name: "build"
+on: [push, pull_request]
+env:
+  TRIVY_VERSION: 0.43.1
+  COPA_VERSION: 0.3.0
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Setup BATS
+        uses: mig4/setup-bats@v1
+        with:
+          bats-version: 1.7.0
+
+      - name: Check out code
+        uses: actions/checkout@v1
+
+      - name: Install Trivy
+        run: |
+            curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v${{ env.TRIVY_VERSION }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@ecf95283f03858871ff00b787d79c419715afc34
+
+      - name: Install Copa
+        run: |
+            curl --retry 5 -fsSL -o copa.tar.gz https://github.com/project-copacetic/copacetic/releases/download/v${{ env.COPA_VERSION }}/copa_${{ env.COPA_VERSION }}_linux_amd64.tar.gz
+            tar -zxvf copa.tar.gz 
+            cp copa /usr/local/bin/
+      - name: Bats Test
+        run: bats --recursive --timing .
