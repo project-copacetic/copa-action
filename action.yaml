@@ -12,6 +12,8 @@ inputs:
     required: true
   buildkit-version:
     description: "Buildkit version to use with Copa"
+  copa-version:
+    description: "Copa version used in action"
 outputs:
   patched-image:
     description: 'Image reference of patched image'
@@ -22,8 +24,12 @@ runs:
     - name: docker build copa-action
       shell: bash
       run: |
-        latest_tag=$(curl -s "https://api.github.com/repos/project-copacetic/copacetic/releases/latest" | jq -r '.tag_name') &&\
-        latest_version="${latest:1}" &&\
+        if [ -z "${{ inputs.copa-version }}" ]; then
+          latest_tag=$(curl -s "https://api.github.com/repos/project-copacetic/copacetic/releases/latest" | jq -r '.tag_name')
+          latest_version="${latest:1}"
+        else
+          latest_version=${{ inputs.copa-version }}
+        fi
         docker build --build-arg copa_version=${latest_version} -t copa-action .
     - name: docker run buildkitd
       shell: bash

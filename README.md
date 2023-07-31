@@ -16,6 +16,10 @@ This action patches vulnerable containers using [Copa](https://github.com/projec
 
 **Required** The patched image tag to append to the original tag.
 
+## `copa-version`
+
+**Optional** The Copa version used in the action, default is latest.
+
 ## Output
 
 ## `patched-image`
@@ -73,6 +77,8 @@ jobs:
             image-report: 'report.json'
             patched-tag: '-patched'
             buildkit-version: 'v0.11.6'
+            # optional, default is latest
+            copa-version: '0.2.0'
 
         - name: Login to Docker Hub
           if: steps.copa.conclusion == 'success'
