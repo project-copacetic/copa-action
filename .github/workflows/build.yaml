@@ -35,3 +35,4 @@ jobs:
           chmod +x ${{ github.workspace }}/entrypoint.sh
           cd ${{ github.workspace }}/test
           ./test.bats
+          docker images
