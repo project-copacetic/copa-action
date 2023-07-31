@@ -24,6 +24,9 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-buildx-action@ecf95283f03858871ff00b787d79c419715afc34
 
+      - name: Set up Docker
+        run: docker pull docker.io/library/nginx:1.21.6
+
       - name: Install Copa
         run: |
             curl --retry 5 -fsSL -o copa.tar.gz https://github.com/project-copacetic/copacetic/releases/download/v${{ env.COPA_VERSION }}/copa_${{ env.COPA_VERSION }}_linux_amd64.tar.gz
