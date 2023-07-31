@@ -1,19 +1,14 @@
 #!/usr/bin/env bats
-load_lib() {
-  local name="$1"
-  load "test_helper/${name}/load"
-}
 
-load_lib bats-support
-load_lib bats-assert
+load helpers
 
 setup() {
-    docker run --detach --rm --privileged -p 127.0.0.1:8888:8888/tcp --name buildkitd --entrypoint buildkitd moby/buildkit:v0.12.0 --addr tcp://0.0.0.0:8888
+    docker run --detach --rm --privileged -p 127.0.0.1:8888:8888/tcp --name buildkitd2 --entrypoint buildkitd moby/buildkit:v0.12.0 --addr tcp://0.0.0.0:8888
     run ./entrypoint.sh 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched'
 }
 
 teardown() {
-    docker stop buildkitd
+    docker stop buildkitd2
 }
 
 @test "Check patched docker image IDs" {
