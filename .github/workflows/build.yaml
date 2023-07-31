@@ -33,4 +33,5 @@ jobs:
       - name: Bats Test
         run: |
           cd ${{ github.workspace }}/test
+          chmod +x entrypoint.sh
           ./test.bats
