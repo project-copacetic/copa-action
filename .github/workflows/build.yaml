@@ -3,7 +3,7 @@ on: [push, pull_request]
 env:
   TRIVY_VERSION: 0.43.1
   COPA_VERSION: 0.3.0
-
+permissions: write-all
 jobs:
   build:
     name: build
@@ -32,6 +32,6 @@ jobs:
 
       - name: Bats Test
         run: |
+          chmod +x ${{ github.workspace }}/entrypoint.sh
           cd ${{ github.workspace }}/test
-          chmod +x entrypoint.sh
           ./test.bats
