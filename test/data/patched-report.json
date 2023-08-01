@@ -7,7 +7,7 @@
       "Family": "debian",
       "Name": "11.3"
     },
-    "ImageID": "sha256:4cccbf1e3e56794c1149def99fc0e00a918c3e4c0b4bfe977c39d59580281767",
+    "ImageID": "sha256:4319b9b0e0c27a4bacdbbad76d395db69eb6dc4e48e6a6e638f43847d62eb8cc",
     "DiffIDs": [
       "sha256:ad6562704f3759fb50f0d3de5f80a38f65a85e709b77fd24491253990f30b6be",
       "sha256:58354abe5f0e9e8cf3849a697cd86bfefb8448b9deb74e3d13aa3e4c98dd3665",
@@ -15,7 +15,7 @@
       "sha256:57d3fc88cb3f95fe3daac8591dabe1c161af0fcfd4cf099aa3f994c888ac7877",
       "sha256:747b7a567071ddb822a072c4dadc2ef50ef6d1bf35ce477e9a559f1df1b7c571",
       "sha256:33e3df466e11254954ba3b06301c93c066a1f699e2ddd80f0214340236d57935",
-      "sha256:159e3525bbb70daa378eaeb4c1f1a0a16bf620551f3802fccefedadd2ea681e5"
+      "sha256:51c98b98a5dbf9446e1ca18d0c1aed31e48bbf955419510a26e5317dc003e397"
     ],
     "RepoTags": [
       "nginx:1.21.6-patched"
@@ -96,8 +96,8 @@
           "empty_layer": true
         },
         {
-          "created": "2023-07-31T19:38:14Z",
-          "created_by": "mount / from exec sh -c apt install --no-install-recommends --allow-change-held-packages -y libfreetype6 libudev1 libwebp6 ncurses-bin libpcre2-8-0 libtasn1-6 libx11-6 libxslt1.1 libxml2 zlib1g gpgv libc6 libcurl4 libgnutls30 libkrb5support0 libc-bin libexpat1 libtirpc-common openssl libxpm4 ncurses-base libgssapi-krb5-2 libkrb5-3 libssl1.1 libtinfo6 libk5crypto3 libsystemd0 libtiff5 libtirpc3 curl libx11-data \u0026\u0026 apt clean -y",
+          "created": "2023-08-01T16:17:42Z",
+          "created_by": "mount / from exec sh -c apt install --no-install-recommends --allow-change-held-packages -y libexpat1 libk5crypto3 libtirpc-common libwebp6 libxpm4 libcurl4 libkrb5support0 libx11-6 ncurses-bin gpgv libc6 libpcre2-8-0 libtiff5 libxml2 zlib1g libgnutls30 libsystemd0 libtirpc3 libx11-data libc-bin libssl1.1 libtasn1-6 libtinfo6 openssl libkrb5-3 libudev1 ncurses-base libfreetype6 libgssapi-krb5-2 curl libxslt1.1 \u0026\u0026 apt clean -y",
           "comment": "buildkit.exporter.image.v0"
         }
       ],
@@ -111,7 +111,7 @@
           "sha256:57d3fc88cb3f95fe3daac8591dabe1c161af0fcfd4cf099aa3f994c888ac7877",
           "sha256:747b7a567071ddb822a072c4dadc2ef50ef6d1bf35ce477e9a559f1df1b7c571",
           "sha256:33e3df466e11254954ba3b06301c93c066a1f699e2ddd80f0214340236d57935",
-          "sha256:159e3525bbb70daa378eaeb4c1f1a0a16bf620551f3802fccefedadd2ea681e5"
+          "sha256:51c98b98a5dbf9446e1ca18d0c1aed31e48bbf955419510a26e5317dc003e397"
         ]
       },
       "config": {
