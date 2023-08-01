@@ -7,7 +7,7 @@ permissions: write-all
 jobs:
   build:
     name: build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Setup BATS
         uses: mig4/setup-bats@v1
@@ -38,4 +38,3 @@ jobs:
           chmod +x ${{ github.workspace }}/entrypoint.sh
           cd ${{ github.workspace }}/test
           ./test.bats
-          docker images
