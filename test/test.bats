@@ -19,6 +19,7 @@ teardown() {
 @test "Run trivy on patched image" {
     run ../entrypoint.sh 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched'
     run trivy image --vuln-type os --ignore-unfixed -f json -o nginx.1.21.6-patched.json 'docker.io/library/nginx:1.21.6-patched'
+    run ls
     diff=$(diff "./data/patched-report.json" "nginx.1.21.6-patched.json")
     assert_equal "$diff" ""
 }
