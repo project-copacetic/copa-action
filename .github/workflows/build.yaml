@@ -1,7 +1,7 @@
 name: "build"
 on: [push, pull_request]
 env:
-  TRIVY_VERSION: 0.43.1
+  TRIVY_VERSION: 0.44.0
   COPA_VERSION: 0.3.0
 permissions: read-all
 jobs:
@@ -19,7 +19,9 @@ jobs:
 
       - name: Install Trivy
         run: |
-            curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v${{ env.TRIVY_VERSION }}
+            curl -fsSL -o trivy.tar.gz https://github.com/aquasecurity/trivy/releases/download/v${{ env.TRIVY_VERSION }}/trivy_${{ env.TRIVY_VERSION }}_Linux-64bit.tar.gz
+            tar -zxvf trivy.tar.gz
+            cp trivy /usr/local/bin/
 
       - name: Set up Docker
         uses: docker/setup-buildx-action@ecf95283f03858871ff00b787d79c419715afc34
