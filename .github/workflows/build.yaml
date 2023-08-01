@@ -3,7 +3,7 @@ on: [push, pull_request]
 env:
   TRIVY_VERSION: 0.43.1
   COPA_VERSION: 0.3.0
-permissions: write-all
+permissions: read-all
 jobs:
   build:
     name: build
