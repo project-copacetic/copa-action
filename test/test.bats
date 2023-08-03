@@ -2,10 +2,6 @@
 
 load helpers
 
-setup_file(){
-    docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:v0.12.0 --addr tcp://0.0.0.0:8888
-}
-
 teardown_file(){
     docker ps -a
     docker stop buildkitd
