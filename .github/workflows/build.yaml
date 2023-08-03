@@ -50,7 +50,4 @@ jobs:
             --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT \
             --name=copa-action \
             copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched'
-          docker logs copa-action
- #         chmod +x ${{ github.workspace }}/entrypoint.sh
- #         cd ${{ github.workspace }}/test
-#          bats --print-output-on-failure ./test.bats
+          bats --print-output-on-failure ./test.bats
