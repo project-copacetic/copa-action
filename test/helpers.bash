@@ -8,6 +8,13 @@ assert_equal() {
   fi
 }
 
+assert_not_equal() {
+  if [[ "$1" != "$2" ]]; then
+    echo "actual: $1"
+    return 0
+  fi
+}
+
 assert_success() {
   if [[ "$status" != 0 ]]; then
     echo "expected: 0"
