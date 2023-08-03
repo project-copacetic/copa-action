@@ -8,6 +8,7 @@ teardown_file(){
 }
 
 @test "Check patched docker image IDs" {
+    docker images
     id=$(docker images --quiet 'nginx:1.21.6-patched')
     assert_equal "$id" "4319b9b0e0c2"
 }
