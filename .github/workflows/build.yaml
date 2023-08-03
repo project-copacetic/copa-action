@@ -26,7 +26,7 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-buildx-action@ecf95283f03858871ff00b787d79c419715afc34
 
-      - name: Set up Docker
+      - name: Pull docker.io/library/nginx:1.21.6
         run: docker pull docker.io/library/nginx:1.21.6
 
       - name: Install Copa
@@ -37,6 +37,7 @@ jobs:
 
       - name: Bats Test
         run: |
+          docker build --build-arg copa_version=${{ env.COPA_VERSION }} -t copa-action .
           chmod +x ${{ github.workspace }}/entrypoint.sh
           cd ${{ github.workspace }}/test
-          ./test.bats
+          bats --print-output-on-failure ./test.bats
