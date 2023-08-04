@@ -8,7 +8,7 @@ inputs:
     description: 'The trivy json report of the image to patch'
     required: true
   patched-tag:
-    description: 'The patched image tag to append to the original tag'
+    description: 'The new patched image tag'
     required: true
   buildkit-version:
     description: "Buildkit version to use with Copa"

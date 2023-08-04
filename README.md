@@ -14,7 +14,7 @@ This action patches vulnerable containers using [Copa](https://github.com/projec
 
 ## `patched-tag`
 
-**Required** The patched image tag to append to the original tag.
+**Required** The new patched image tag.
 
 ## `copa-version`
 
@@ -75,7 +75,7 @@ jobs:
           with:
             image: ${{ matrix.images }}
             image-report: 'report.json'
-            patched-tag: '-patched'
+            patched-tag: 'patched'
             buildkit-version: 'v0.11.6'
             # optional, default is latest
             copa-version: '0.2.0'
