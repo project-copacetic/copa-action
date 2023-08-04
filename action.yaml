@@ -1,0 +1,42 @@
+name: 'Copa Action'
+description: 'Patch Vulnerable Images'
+inputs:
+  image:
+    description: 'The image reference to patch'
+    required: true
+  image-report:
+    description: 'The trivy json report of the image to patch'
+    required: true
+  patched-tag:
+    description: 'The new patched image tag'
+    required: true
+  buildkit-version:
+    description: "Buildkit version to use with Copa"
+  copa-version:
+    description: "Copa version to use"
+outputs:
+  patched-image:
+    description: 'Image reference of patched image'
+    value: ${{ steps.copa-action.outputs.patched-image }}
+runs:
+  using: "composite"
+  steps: 
+    - name: docker build copa-action
+      shell: bash
+      run: |
+        if [ -z "${{ inputs.copa-version }}" ]; then
+          latest_tag=$(curl -s "https://api.github.com/repos/project-copacetic/copacetic/releases/latest" | jq -r '.tag_name')
+          latest_version="${latest:1}"
+        else
+          latest_version=${{ inputs.copa-version }}
+        fi
+        docker build --build-arg copa_version=${latest_version} -t copa-action .
+    - name: docker run buildkitd
+      shell: bash
+      run: |
+        docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:${{ inputs.buildkit-version }} --addr tcp://0.0.0.0:8888
+    - name: docker run copa-action
+      id: copa-action
+      shell: bash
+      run : |
+        docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action copa-action ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }}
