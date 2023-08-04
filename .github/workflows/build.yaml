@@ -3,6 +3,7 @@ on: [push, pull_request]
 env:
   TRIVY_VERSION: 0.44.0
   COPA_VERSION: 0.3.0
+  BUILDKIT_VERSION: 0.12.0
 permissions: read-all
 jobs:
   build:
@@ -37,7 +38,7 @@ jobs:
 
       - name: Bats Test
         run: |
-          docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:v0.12.0 --addr tcp://0.0.0.0:8888
+          docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:v${{ env.BUILDKIT_VERSION }} --addr tcp://0.0.0.0:8888
           docker build --build-arg copa_version=${{ env.COPA_VERSION }} -t copa-action .
           cd ${{ github.workspace }}/test
           docker run --net=host \
