@@ -3,7 +3,6 @@
 load helpers
 
 teardown_file(){
-    docker ps -a
     docker stop buildkitd
 }
 
