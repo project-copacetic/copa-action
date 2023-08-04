@@ -26,11 +26,11 @@ runs:
       run: |
         if [ -z "${{ inputs.copa-version }}" ]; then
           latest_tag=$(curl -s "https://api.github.com/repos/project-copacetic/copacetic/releases/latest" | jq -r '.tag_name')
-          latest_version="${latest:1}"
+          copa_version="${latest:1}"
         else
-          latest_version=${{ inputs.copa-version }}
+          copa_version=${{ inputs.copa-version }}
         fi
-        docker build --build-arg copa_version=${latest_version} -t copa-action .
+        docker pull ghcr.io/project-copacetic/copa-action/copa-action:v${copa_version}
     - name: docker run buildkitd
       shell: bash
       run: |
