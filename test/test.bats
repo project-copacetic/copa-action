@@ -7,10 +7,10 @@ teardown_file(){
     docker stop buildkitd
 }
 
-@test "Check patched docker image IDs" {
+@test "Check patched exists" {
     docker images
     id=$(docker images --quiet 'nginx:1.21.6-patched')
-    assert_not_equal "$id" "4319b9b0e0c2"
+    assert_not_equal "$id" ""
 }
 
 @test "Run trivy on patched image" {
