@@ -14,7 +14,7 @@ teardown_file(){
 }
 
 @test "Run trivy on patched image" {
-    run trivy image --vuln-type os --ignore-unfixed -f json -o nginx.1.21.6-patched.json 'docker.io/library/nginx:1.21.6-patched'
-    run diff "./data/patched-report.json" "nginx.1.21.6-patched.json"
-    assert_equal "$output" ""
+    trivy image --vuln-type os --ignore-unfixed -f json -o nginx.1.21.6-patched.json 'docker.io/library/nginx:1.21.6-patched'
+    vulns=$(jq '.Results[0].Vulnerabilities | length' nginx.1.21.6-patched.json)
+    assert_equal "$vulns" "0"
 }
