@@ -7,7 +7,7 @@ teardown_file(){
     docker stop buildkitd
 }
 
-@test "Check patched exists" {
+@test "Check patched image exists" {
     docker images
     id=$(docker images --quiet 'nginx:1.21.6-patched')
     assert_not_equal "$id" ""
