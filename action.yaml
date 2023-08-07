@@ -21,16 +21,18 @@ outputs:
 runs:
   using: "composite"
   steps: 
-    - name: docker build copa-action
+    - name: docker pull copa-action
       shell: bash
       run: |
         if [ -z "${{ inputs.copa-version }}" ]; then
           latest_tag=$(curl -s "https://api.github.com/repos/project-copacetic/copacetic/releases/latest" | jq -r '.tag_name')
-          copa_version="${latest:1}"
+          version=${latest_tag:1}
         else
-          copa_version=${{ inputs.copa-version }}
+          version="${{ inputs.copa-version }}"
         fi
-        docker pull ghcr.io/project-copacetic/copa-action/copa-action:v${copa_version}
+        docker pull "ghcr.io/project-copacetic/copa-action/copa-action:v$version"
+        docker tag "ghcr.io/project-copacetic/copa-action/copa-action:v$version" copa-action:latest
+        docker images
     - name: docker run buildkitd
       shell: bash
       run: |
@@ -39,4 +41,4 @@ runs:
       id: copa-action
       shell: bash
       run : |
-        docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action copa-action ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }}
+        docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action copa-action:latest ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }}
