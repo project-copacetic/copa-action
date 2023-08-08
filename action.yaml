@@ -35,4 +35,4 @@ runs:
         else
           version="${{ inputs.copa-version }}"
         fi
-        docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action "ghcr.io/project-copacetic/copa-action/copa-action:v$version" ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }}
+        docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action "ghcr.io/project-copacetic/copa-action:v$version" ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }}
