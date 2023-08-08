@@ -2,7 +2,7 @@
 
 load helpers
 
-teardown_file(){
+teardown_file() {
     docker stop buildkitd
 }
 
@@ -13,7 +13,8 @@ teardown_file(){
 }
 
 @test "Run trivy on patched image" {
-    trivy image --vuln-type os --ignore-unfixed -f json -o nginx.1.21.6-patched.json 'docker.io/library/nginx:1.21.6-patched'
+    run trivy image --exit-code 1 --vuln-type os --ignore-unfixed -f json -o nginx.1.21.6-patched.json 'docker.io/library/nginx:1.21.6-patched'
+    [ "$status" -eq 0 ]
     vulns=$(jq '.Results[0].Vulnerabilities | length' nginx.1.21.6-patched.json)
     assert_equal "$vulns" "0"
 }
