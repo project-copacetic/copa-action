@@ -42,12 +42,6 @@ jobs:
             images: ['docker.io/library/nginx:1.21.6', 'docker.io/openpolicyagent/opa:0.46.0', 'docker.io/library/hello-world:latest']
 
         steps:
-        - name: Checkout repository
-          uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v0.1.0
-          with:
-            repository: project-copacetic/copa-action
-            ref: main
-
         - name: Set up Docker Buildx
           uses: docker/setup-buildx-action@ecf95283f03858871ff00b787d79c419715afc34
 
