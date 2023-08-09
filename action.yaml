@@ -1,4 +1,4 @@
-name: 'Copa Action'
+name: 'Copacetic Action'
 description: 'Patch Vulnerable Images'
 inputs:
   image:
