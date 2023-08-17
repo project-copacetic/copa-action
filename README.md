@@ -16,6 +16,10 @@ This action patches vulnerable containers using [Copa](https://github.com/projec
 
 **Required** The new patched image tag.
 
+## `buildkit-version`
+
+**Optional** The buildkit version used in the action, default is latest.
+
 ## `copa-version`
 
 **Optional** The Copa version used in the action, default is latest.
