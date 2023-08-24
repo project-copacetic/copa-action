@@ -1,0 +1,31 @@
+name: Release
+
+on:
+    repository_dispatch:
+        types:
+            - copa_release
+            
+jobs:
+    release:
+        runs-on: ubuntu-latest
+        steps:
+
+        - name: Checkout Repository
+          uses: actions/checkout@v2
+        
+        - name: Set up Docker
+          uses: docker/setup-buildx-action@4c0219f9ac95b02789c1075625400b2acbff50b1 # v2.9.1
+
+        - name: Login to ghcr.io
+          uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # v2.2.0
+          with:
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Build and push copa-action image with new version
+          run: |
+            tag=${{ github.event.client_payload.version }}
+            docker buildx build --build-arg copa_version=${tag} -t ghcr.io/project-copacetic/copa-action:v"$tag" --push .
+          env: 
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
