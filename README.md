@@ -1,6 +1,6 @@
-# Copa Action
+# Copacetic Action
 
-This action patches vulnerable containers using [Copa](https://github.com/project-copacetic/copacetic).
+This action patches vulnerable containers using [Copa](https://github.com/project-copacetic/copacetic). Copacetic Action is supported with Copa version 0.3.0 and later.
 
 ## Inputs
 
@@ -69,14 +69,14 @@ jobs:
         - name: Copa Action
           if: steps.vuln_cout.outputs.vuln_count != '0'
           id: copa
-          uses: project-copacetic/copa-action@v0.1.0
+          uses: project-copacetic/copa-action@v1.0.0
           with:
             image: ${{ matrix.images }}
             image-report: 'report.json'
             patched-tag: 'patched'
             buildkit-version: 'v0.11.6'
             # optional, default is latest
-            copa-version: '0.2.0'
+            copa-version: '0.3.0'
 
         - name: Login to Docker Hub
           if: steps.copa.conclusion == 'success'
