@@ -27,5 +27,3 @@ jobs:
           run: |
             tag=${{ github.event.client_payload.version }}
             docker buildx build --build-arg copa_version=${tag} -t ghcr.io/project-copacetic/copa-action:v"$tag" --push .
-          env: 
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
