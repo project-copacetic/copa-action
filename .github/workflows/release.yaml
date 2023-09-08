@@ -1,9 +1,11 @@
 name: Release
 
 on:
-    repository_dispatch:
-        types:
-            - copa_release
+  workflow_dispatch:
+    inputs:
+      copa-version:
+        description: 'Copa Version'
+        required: true
             
 jobs:
     release:
@@ -25,5 +27,4 @@ jobs:
 
         - name: Build and push copa-action image with new version
           run: |
-            tag=${{ github.event.client_payload.version }}
-            docker buildx build --build-arg copa_version=${tag} -t ghcr.io/project-copacetic/copa-action:v"$tag" --push .
+            docker buildx build --build-arg copa_version=${{ github.event.inputs.copa-version }} -t ghcr.io/project-copacetic/copa-action:v${{ github.event.inputs.copa-version }} --push .
