@@ -47,10 +47,10 @@ jobs:
 
         steps:
         - name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@ecf95283f03858871ff00b787d79c419715afc34
+          uses: docker/setup-buildx-action@dedd61cf5d839122591f5027c89bf3ad27691d18
 
         - name: Generate Trivy Report
-          uses: aquasecurity/trivy-action@465a07811f14bebb1938fbed4728c6a1ff8901fc
+          uses: aquasecurity/trivy-action@69cbbc0cbbf6a2b0bab8dcf0e9f2d7ead08e87e4
           with:
             scan-type: 'image'
             format: 'json'
@@ -60,14 +60,14 @@ jobs:
             image-ref: ${{ matrix.images }}
 
         - name: Check Vuln Count
-          id: vuln_cout
+          id: vuln_count
           run: |
             report_file="report.json"
             vuln_count=$(jq '.Results | length' "$report_file")
             echo "vuln_count=$vuln_count" >> $GITHUB_OUTPUT
 
         - name: Copa Action
-          if: steps.vuln_cout.outputs.vuln_count != '0'
+          if: steps.vuln_count.outputs.vuln_count != '0'
           id: copa
           uses: project-copacetic/copa-action@v1.0.0
           with:
@@ -81,7 +81,7 @@ jobs:
         - name: Login to Docker Hub
           if: steps.copa.conclusion == 'success'
           id: login
-          uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc
+          uses: docker/login-action@b4bedf8053341df3b5a9f9e0f2cf4e79e27360c6
           with:
             username: 'user'
             password: ${{ secrets.DOCKERHUB_TOKEN }}
