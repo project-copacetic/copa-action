@@ -34,7 +34,7 @@ runs:
       shell: bash
       run : |
         if [ -z "${{ inputs.copa-version }}" ]; then
-          latest_tag=$(curl -s "https://api.github.com/repos/project-copacetic/copacetic/releases/latest" | jq -r '.tag_name')
+          latest_tag=$(curl --retry 5 -s "https://api.github.com/repos/project-copacetic/copacetic/releases/latest" | jq -r '.tag_name')
           version=${latest_tag:1}
         else
           version="${{ inputs.copa-version }}"
