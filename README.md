@@ -32,7 +32,7 @@ Image reference of the resulting patched image.
 
 ## Example usage
 
-```
+```yaml
 on: [push]
 
 jobs:
