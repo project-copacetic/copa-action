@@ -1,5 +1,8 @@
-name: 'Copacetic Action'
-description: 'Patch Vulnerable Images'
+name: "Copacetic Action"
+description: "Patch Vulnerable Images"
+branding:
+  icon: "package"
+  color: "blue"
 inputs:
   image:
     description: 'The image reference to patch'
@@ -20,7 +23,7 @@ outputs:
     value: ${{ steps.copa-action.outputs.patched-image }}
 runs:
   using: "composite"
-  steps: 
+  steps:
     - name: docker run buildkitd
       shell: bash
       run: |

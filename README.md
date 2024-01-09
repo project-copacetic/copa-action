@@ -1,6 +1,8 @@
 # Copacetic Action
 
-This action patches vulnerable containers using [Copa](https://github.com/project-copacetic/copacetic).  
+[Marketplace](https://github.com/marketplace/actions/copacetic-action)
+
+This action patches vulnerable containers using [Copa](https://github.com/project-copacetic/copacetic).
 Copacetic Action is supported with Copa version 0.3.0 and later.
 
 ## Inputs
