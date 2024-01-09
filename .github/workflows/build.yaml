@@ -29,7 +29,7 @@ jobs:
 
       - name: Pull docker.io/library/nginx:1.21.6
         run: docker pull docker.io/library/nginx:1.21.6
-
+      
       - name: Generate trivy vuln report for nginx image
         run: |
           trivy image --vuln-type os --ignore-unfixed -f json -o /tmp/nginx.1.21.6.json docker.io/library/nginx:1.21.6
@@ -44,7 +44,6 @@ jobs:
         run: |
           docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:v${{ env.BUILDKIT_VERSION }} --addr tcp://0.0.0.0:8888
           docker build --build-arg copa_version=${{ env.COPA_VERSION }} -t copa-action .
-          cd ${{ github.workspace }}/test
           docker run --net=host \
             --mount=type=bind,source=/tmp,target=/data \
             --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
@@ -52,4 +51,4 @@ jobs:
             --name=copa-action \
             copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched'
           docker images
-          bats --print-output-on-failure ./test.bats
+          bats --print-output-on-failure ./test/test.bats
