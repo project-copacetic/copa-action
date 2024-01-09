@@ -46,7 +46,7 @@ jobs:
           docker build --build-arg copa_version=${{ env.COPA_VERSION }} -t copa-action .
           cd ${{ github.workspace }}/test
           docker run --net=host \
-            --mount=type=bind,source=$(pwd)/data,target=/data \
+            --mount=type=bind,source=/tmp,target=/data \
             --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
             --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT \
             --name=copa-action \
