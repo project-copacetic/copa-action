@@ -19,6 +19,10 @@ Copacetic Action is supported with Copa version 0.3.0 and later.
 
 **Required** The new patched image tag.
 
+## `timeout`
+
+**Optional** The timeout for the action, default is 5m.
+
 ## `buildkit-version`
 
 **Optional** The buildkit version used in the action, default is latest.
@@ -50,10 +54,10 @@ jobs:
 
         steps:
         - name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@dedd61cf5d839122591f5027c89bf3ad27691d18
+          uses: docker/setup-buildx-action@v3
 
         - name: Generate Trivy Report
-          uses: aquasecurity/trivy-action@69cbbc0cbbf6a2b0bab8dcf0e9f2d7ead08e87e4
+          uses: aquasecurity/trivy-action@0
           with:
             scan-type: 'image'
             format: 'json'
@@ -72,7 +76,7 @@ jobs:
         - name: Copa Action
           if: steps.vuln_count.outputs.vuln_count != '0'
           id: copa
-          uses: project-copacetic/copa-action@v1.0.0
+          uses: project-copacetic/copa-action@v1
           with:
             image: ${{ matrix.images }}
             image-report: 'report.json'
