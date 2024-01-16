@@ -15,6 +15,6 @@ teardown_file() {
 @test "Run trivy on patched image" {
     run trivy image --exit-code 1 --vuln-type os --ignore-unfixed -f json -o nginx.1.21.6-patched.json 'docker.io/library/nginx:1.21.6-patched'
     [ "$status" -eq 0 ]
-    vulns=$(jq '[.Results[] | select(.Class=="os-pkgs") | .Vulnerabilities[]] | length' nginx.1.21.6-patched.json)
+    vulns=$(jq '[.Results[] | select(.Class=="os-pkgs" and .Vulnerabilities!=null) | .Vulnerabilities[]] | length' nginx.1.21.6-patched.json)
     assert_equal "$vulns" "0"
 }

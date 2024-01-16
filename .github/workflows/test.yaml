@@ -32,7 +32,7 @@ jobs:
         id: vuln_count
         run: |
           report_file="report.json"
-          vuln_count=$(jq '[.Results[] | select(.Class=="os-pkgs") | .Vulnerabilities[]] | length' "$report_file")
+          vuln_count=$(jq '[.Results[] | select(.Class=="os-pkgs" and .Vulnerabilities!=null) | .Vulnerabilities[]] | length' "$report_file")
           echo "vuln_count=$vuln_count" >> $GITHUB_OUTPUT
 
         # copa action will only run if there are vulnerabilities
