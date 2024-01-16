@@ -1,5 +1,6 @@
-name: Patch images
+name: Patch vulnerable images
 on:
+  # change this to your preferred trigger
   workflow_dispatch:
 jobs:
   patch:
@@ -32,7 +33,7 @@ jobs:
         id: vuln_count
         run: |
           report_file="report.json"
-          vuln_count=$(jq '[.Results[] | select(.Class=="os-pkgs" and .Vulnerabilities!=null) | .Vulnerabilities[]] | length' "$report_file")
+          vuln_count=$(jq 'if .Results then [.Results[] | select(.Class=="os-pkgs" and .Vulnerabilities!=null) | .Vulnerabilities[]] | length else 0 end' "$report_file")
           echo "vuln_count=$vuln_count" >> $GITHUB_OUTPUT
 
         # copa action will only run if there are vulnerabilities
