@@ -55,7 +55,7 @@ jobs:
           id: vuln_count
           run: |
             report_file="report.json"
-            vuln_count=$(jq '.Results | length' "$report_file")
+            vuln_count=$(jq '[.Results[] | select(.Class=="os-pkgs") | .Vulnerabilities[]] | length' "$report_file")
             echo "vuln_count=$vuln_count" >> $GITHUB_OUTPUT
 
         - name: Copa Action
