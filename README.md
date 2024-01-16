@@ -7,35 +7,20 @@ Copacetic Action is supported with Copa version 0.3.0 and later.
 
 ## Inputs
 
-## `image`
+| Name               | Type   | Required | Default  | Description                                           |
+| ------------------ | ------ | -------- | -------- | ----------------------------------------------------- |
+| `image`            | String | True     |          | Image reference to patch                              |
+| `image-report`     | String | True     |          | Trivy JSON vulnerability report of the image to patch |
+| `patched-tag`      | String | True     |          | Patched image tag                                     |
+| `timeout`          | String | False    | `5m`     | Timeout for `copa patch`                              |
+| `buildkit-version` | String | False    | `latest` | Buildkit version                                      |
+| `copa-version`     | String | False    | `latest` | Copa version                                          |
 
-**Required** The image reference to patch.
+## Outputs
 
-## `image-report`
-
-**Required** The trivy json vulnerability report of the image to patch.
-
-## `patched-tag`
-
-**Required** The new patched image tag.
-
-## `timeout`
-
-**Optional** The timeout for the action, default is 5m.
-
-## `buildkit-version`
-
-**Optional** The buildkit version used in the action, default is latest.
-
-## `copa-version`
-
-**Optional** The Copa version used in the action, default is latest.
-
-## Output
-
-## `patched-image`
-
-Image reference of the resulting patched image.
+| Name            | Type   | Description                          |
+| --------------- | ------ | ------------------------------------ |
+| `patched-image` | String | Image reference of the patched image |
 
 ## Example usage
 
@@ -50,14 +35,14 @@ jobs:
           fail-fast: false
           matrix:
             # provide relevant list of images to scan on each run
-            images: ['docker.io/library/nginx:1.21.6', 'docker.io/openpolicyagent/opa:0.46.0', 'docker.io/library/hello-world:latest']
+            images:
+              - "docker.io/library/nginx:1.21.6"
+              - "docker.io/openpolicyagent/opa:0.46.0"
+              - "docker.io/library/hello-world:latest"
 
         steps:
-        - name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@v3
-
         - name: Generate Trivy Report
-          uses: aquasecurity/trivy-action@0
+          uses: aquasecurity/trivy-action@d43c1f16c00cfd3978dde6c07f4bbcf9eb6993ca # 0.16.1
           with:
             scan-type: 'image'
             format: 'json'
@@ -81,14 +66,13 @@ jobs:
             image: ${{ matrix.images }}
             image-report: 'report.json'
             patched-tag: 'patched'
-            buildkit-version: 'v0.11.6'
-            # optional, default is latest
-            copa-version: '0.3.0'
+            buildkit-version: 'v0.11.6' # optional, default is latest
+            copa-version: '0.6.0' # optional, default is latest
 
         - name: Login to Docker Hub
           if: steps.copa.conclusion == 'success'
           id: login
-          uses: docker/login-action@b4bedf8053341df3b5a9f9e0f2cf4e79e27360c6
+          uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
           with:
             username: 'user'
             password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -97,5 +81,4 @@ jobs:
           if: steps.login.conclusion == 'success'
           run: |
             docker push ${{ steps.copa.outputs.patched-image }}
-
 ```

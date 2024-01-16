@@ -13,7 +13,7 @@ jobs:
       - name: Setup BATS
         uses: mig4/setup-bats@af9a00deb21b5d795cabfeaa8d9060410377686d # v1.2.0
         with:
-          bats-version: $BATS_VERSION
+          bats-version: ${{ env.BATS_VERSION }}
 
       - name: Check out code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
