@@ -24,4 +24,4 @@ Copacetic Action is supported with Copa version 0.3.0 and later.
 
 ## Example usage
 
-https://github.com/sozercan/copa-action/blob/1318614969da67670fc36a7be0f55c4d5c3f1de8/.github/workflows/patch.yaml#L1-L64
+https://github.com/sozercan/copa-action/blob/ab80ab312b87e03bad5fcf806667d8ae8b5e3ead/.github/workflows/patch.yaml#L1-L69

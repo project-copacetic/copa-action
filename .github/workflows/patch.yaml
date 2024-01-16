@@ -1,12 +1,24 @@
 name: Patch vulnerable images
 on:
-  # change this to your preferred trigger
+  # change these to your preferred event triggers
+  # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
   workflow_dispatch:
 jobs:
   patch:
     runs-on: ubuntu-latest
     # used for pushing patched image to GHCR
     permissions:
+      contents: read
       packages: write
     strategy:
       fail-fast: false
@@ -48,10 +60,10 @@ jobs:
           image: ${{ matrix.images }}
           image-report: "report.json"
           patched-tag: "patched"
-          buildkit-version: "v0.11.6" # optional, default is latest
+          buildkit-version: "v0.12.4" # optional, default is latest
           copa-version: "0.6.0" # optional, default is latest
 
-        # for other registries, see https://github.com/docker/login-action#usage
+        # see https://github.com/docker/login-action#usage for other registries
       - name: Login to GHCR
         if: steps.copa.conclusion == 'success'
         id: login
@@ -65,5 +77,5 @@ jobs:
         if: steps.login.conclusion == 'success'
         run: |
           # retag if needed
-          docker tag ${{ steps.copa.outputs.patched-image }} ghcr.io/sozercan/copa-action/test/${{ steps.copa.outputs.patched-image }}
-          docker push ghcr.io/sozercan/copa-action/test/${{ steps.copa.outputs.patched-image }}
+          docker tag ${{ steps.copa.outputs.patched-image }} ghcr.io/project-copacetic/copa-action/test/${{ steps.copa.outputs.patched-image }}
+          docker push ghcr.io/project-copacetic/copa-action/test/${{ steps.copa.outputs.patched-image }}
