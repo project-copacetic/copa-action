@@ -28,7 +28,7 @@ jobs:
           vuln-type: "os"
           image-ref: ${{ matrix.images }}
 
-        # check if there are OS package vulnerabilities
+        # check whether there are any OS package vulnerabilities
       - name: Check vulnerability count
         id: vuln_count
         run: |
@@ -37,10 +37,12 @@ jobs:
           echo "vuln_count=$vuln_count" >> $GITHUB_OUTPUT
 
         # copa action will only run if there are vulnerabilities
-      - name: Copa Action
+      - name: Run Copa action
         if: steps.vuln_count.outputs.vuln_count != '0'
         id: copa
-        # using latest (v1) version for illustrative purposes. make sure to pin to a digest for security and stability
+        # using latest (v1) version for illustrative purposes
+        # make sure to pin to a digest for security and stability
+        # rely on dependabot for digest/version updates
         uses: project-copacetic/copa-action@v1
         with:
           image: ${{ matrix.images }}
@@ -52,14 +54,16 @@ jobs:
         # for other registries, see https://github.com/docker/login-action#usage
       - name: Login to GHCR
         if: steps.copa.conclusion == 'success'
+        id: login
         uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Docker Push Patched Image
+      - name: Push patched image
         if: steps.login.conclusion == 'success'
         run: |
-          docker images
-          # docker push ${{ steps.copa.outputs.patched-image }}
+          # retag if needed
+          docker tag ${{ steps.copa.outputs.patched-image }} ghcr.io/sozercan/copa-action/test/${{ steps.copa.outputs.patched-image }}
+          docker push ghcr.io/sozercan/copa-action/test/${{ steps.copa.outputs.patched-image }}
