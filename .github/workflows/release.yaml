@@ -1,0 +1,29 @@
+name: release
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Which version are we releasing? (format vX.Y.Z)'
+        required: true
+
+jobs:
+    release:
+        name: "release"
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repo
+            uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+            with:
+              fetch-depth: 0  
+          
+          - name: Push new tag
+            run: |
+              git tag -a "${{ github.event.inputs.release_version }}" -m "${{ github.event.inputs.release_version }}"
+              git push --set-upstream origin "${{ github.event.inputs.release_version }}"
+              
+          - name: Create GitHub release
+            uses: marvinpinto/action-automatic-releases@919008cf3f741b179569b7a6fb4d8860689ab7f0 # v1.2.1
+            with:
+              repo_token: "${{ secrets.GITHUB_TOKEN }}"
+              prerelease: false
+              automatic_release_tag: "${{ github.event.inputs.release_version }}"
