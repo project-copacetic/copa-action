@@ -1,9 +1,9 @@
 name: "build"
 on: [push, pull_request]
 env:
-  TRIVY_VERSION: 0.44.0
-  COPA_VERSION: 0.3.0
-  BUILDKIT_VERSION: 0.12.0
+  TRIVY_VERSION: 0.48.3
+  BUILDKIT_VERSION: 0.12.4
+  BATS_VERSION: 1.10.0
 permissions: read-all
 jobs:
   build:
@@ -11,12 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup BATS
-        uses: mig4/setup-bats@v1
+        uses: mig4/setup-bats@af9a00deb21b5d795cabfeaa8d9060410377686d # v1.2.0
         with:
-          bats-version: 1.7.0
+          bats-version: ${{ env.BATS_VERSION }}
 
       - name: Check out code
-        uses: actions/checkout@v3.5.3
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Install Trivy
         run: |
@@ -24,31 +24,32 @@ jobs:
             tar -zxvf trivy.tar.gz
             cp trivy /usr/local/bin/
 
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@ecf95283f03858871ff00b787d79c419715afc34
-
-      - name: Pull docker.io/library/nginx:1.21.6
-        run: docker pull docker.io/library/nginx:1.21.6
-      
       - name: Generate trivy vuln report for nginx image
         run: |
           trivy image --vuln-type os --ignore-unfixed -f json -o /tmp/nginx.1.21.6.json docker.io/library/nginx:1.21.6
 
+      - name: Get latest copa version
+        run: |
+          latest_tag=$(curl --retry 5 -s "https://api.github.com/repos/project-copacetic/copacetic/releases/latest" | jq -r '.tag_name')
+          version=${latest_tag:1}
+          echo "Copa version: $version"
+          echo "COPA_VERSION=$version" >> $GITHUB_ENV
+
       - name: Install Copa
         run: |
-            curl --retry 5 -fsSL -o copa.tar.gz https://github.com/project-copacetic/copacetic/releases/download/v${{ env.COPA_VERSION }}/copa_${{ env.COPA_VERSION }}_linux_amd64.tar.gz
-            tar -zxvf copa.tar.gz 
+            curl --retry 5 -fsSL -o copa.tar.gz https://github.com/project-copacetic/copacetic/releases/download/v${COPA_VERSION}/copa_${COPA_VERSION}_linux_amd64.tar.gz
+            tar -zxvf copa.tar.gz
             cp copa /usr/local/bin/
 
       - name: Bats Test
         run: |
           docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:v${{ env.BUILDKIT_VERSION }} --addr tcp://0.0.0.0:8888
-          docker build --build-arg copa_version=${{ env.COPA_VERSION }} -t copa-action .
+          docker build --build-arg copa_version=${COPA_VERSION} -t copa-action .
           docker run --net=host \
             --mount=type=bind,source=/tmp,target=/data \
             --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
             --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT \
             --name=copa-action \
-            copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched'
+            copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched' '10m'
           docker images
           bats --print-output-on-failure ./test/test.bats
