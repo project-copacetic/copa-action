@@ -1,5 +1,8 @@
-name: 'Copacetic Action'
-description: 'Patch Vulnerable Images'
+name: "Copacetic Action"
+description: "Patch Vulnerable Images"
+branding:
+  icon: "package"
+  color: "blue"
 inputs:
   image:
     description: 'The image reference to patch'
@@ -10,6 +13,9 @@ inputs:
   patched-tag:
     description: 'The new patched image tag'
     required: true
+  timeout:
+    description: 'The timeout for the copa action'
+    default: '5m'
   buildkit-version:
     description: "Buildkit version to use with Copa"
   copa-version:
@@ -20,7 +26,7 @@ outputs:
     value: ${{ steps.copa-action.outputs.patched-image }}
 runs:
   using: "composite"
-  steps: 
+  steps:
     - name: docker run buildkitd
       shell: bash
       run: |
@@ -39,4 +45,4 @@ runs:
         else
           version="${{ inputs.copa-version }}"
         fi
-        docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action "ghcr.io/project-copacetic/copa-action:v$version" ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }}
+        docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action "ghcr.io/project-copacetic/copa-action:v$version" ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }} ${{ inputs.timeout }}
