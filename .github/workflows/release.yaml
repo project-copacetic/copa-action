@@ -30,5 +30,7 @@ jobs:
               git push --set-upstream origin "${{ github.event.inputs.release_version }}"
               
           - name: Create GitHub release
+            env:
+              GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             run : |
               gh release create "${{ github.event.inputs.release_version }}" --generate-notes
