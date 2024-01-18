@@ -6,6 +6,9 @@ on:
         description: 'Which version are we releasing? (format vX.Y.Z)'
         required: true
 
+permissions:
+  contents: write
+
 jobs:
     release:
         name: "release"
