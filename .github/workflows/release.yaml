@@ -18,17 +18,17 @@ jobs:
             uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
             with:
               fetch-depth: 0  
-          
-          - name: Push new tag
+
+          - name: Configure github-actions[bot]
             run: |
               git config user.name 'github-actions[bot]'
               git config user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          - name: Create and push tag
+            run: |
               git tag -a "${{ github.event.inputs.release_version }}" -m "${{ github.event.inputs.release_version }}"
               git push --set-upstream origin "${{ github.event.inputs.release_version }}"
               
           - name: Create GitHub release
-            uses: marvinpinto/action-automatic-releases@919008cf3f741b179569b7a6fb4d8860689ab7f0 # v1.2.1
-            with:
-              repo_token: "${{ secrets.GITHUB_TOKEN }}"
-              prerelease: false
-              automatic_release_tag: "${{ github.event.inputs.release_version }}"
+            run : |
+              gh release create "${{ github.event.inputs.release_version }}" --generate-notes
