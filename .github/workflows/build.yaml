@@ -50,6 +50,6 @@ jobs:
             --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
             --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT \
             --name=copa-action \
-            copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched' '10m' 'openvex' 'output.json'
+            copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched' '10m' 'output.json' 'openvex'
           docker images
           bats --print-output-on-failure ./test/test.bats
