@@ -4,7 +4,9 @@ image=$1
 report=$2
 patched_tag=$3
 timeout=$4
-output_file=$5
+format=$5
+output_file=$6
+
 
 # parse image into image name
 image_no_tag=$(echo "$image" | cut -d':' -f1)
@@ -14,8 +16,9 @@ if [ -z "$output_file" ]
 then
     output=""
 else
-    output="--format=openvex --output $output_file"
+    output="--format $format --output $output_file"
 fi
+
 
 # run copa to patch image
 if copa patch -i "$image" -r ./data/"$report" -t "$patched_tag" --addr tcp://127.0.0.1:8888 --timeout $timeout $output;
