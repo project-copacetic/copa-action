@@ -20,6 +20,8 @@ inputs:
     description: "Buildkit version to use with Copa"
   copa-version:
     description: "Copa version to use"
+  output-file:
+    description: "OpenVEX Document output filename"
 outputs:
   patched-image:
     description: 'Image reference of patched image'
