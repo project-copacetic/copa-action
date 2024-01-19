@@ -15,6 +15,7 @@ Copacetic Action is supported with Copa version 0.3.0 and later.
 | `timeout`          | String | False    | `5m`     | Timeout for `copa patch`                              |
 | `buildkit-version` | String | False    | `latest` | Buildkit version                                      |
 | `copa-version`     | String | False    | `latest` | Copa version                                          |
+| `output-file`      | String | False    |          | Vex Document filename                                 |
 
 ## Outputs
 
