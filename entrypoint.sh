@@ -4,8 +4,8 @@ image=$1
 report=$2
 patched_tag=$3
 timeout=$4
-format=$5
-output_file=$6
+output_file=$5
+format=$6
 
 
 # parse image into image name
