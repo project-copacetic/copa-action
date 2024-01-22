@@ -16,9 +16,8 @@ if [ -z "$output_file" ]
 then
     output=""
 else
-    output="--format $format --output $output_file"
+    output="--format $format --output ./data/"$output_file""
 fi
-
 
 # run copa to patch image
 if copa patch -i "$image" -r ./data/"$report" -t "$patched_tag" --addr tcp://127.0.0.1:8888 --timeout $timeout $output;

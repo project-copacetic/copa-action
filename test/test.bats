@@ -13,12 +13,12 @@ teardown_file() {
 }
 
 @test "Check output.json exists" {
-    run test -f output.json
+    run test -f /tmp/output.json
     [ "$status" -eq 0 ]
 }
 
 @test "Check if output.json contains valid JSON" {
-  run jq empty output.json
+  run jq empty /tmp/output.json
   [ "$status" -eq 0 ]
 }
 
