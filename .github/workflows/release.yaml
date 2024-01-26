@@ -23,11 +23,18 @@ jobs:
             run: |
               git config user.name 'github-actions[bot]'
               git config user.email 'github-actions[bot]@users.noreply.github.com'
-          
-          - name: Create and push tag
+
+          - name: Generate and Push Tags
             run: |
-              git tag -a "${{ github.event.inputs.release_version }}" -m "${{ github.event.inputs.release_version }}"
-              git push --set-upstream origin "${{ github.event.inputs.release_version }}"
+              version=${{ github.event.inputs.release_version }}
+              major=$(echo $version | cut -d. -f1)
+              minor=$(echo $version | cut -d. -f1-2)
+
+              git tag $version
+              git tag $minor -f
+
+              git tag $major -f
+              git push --set-upstream origin --tags -f
               
           - name: Create GitHub release
             env:
