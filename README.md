@@ -7,14 +7,16 @@ Copacetic Action is supported with Copa version 0.3.0 and later.
 
 ## Inputs
 
-| Name               | Type   | Required | Default  | Description                                           |
-| ------------------ | ------ | -------- | -------- | ----------------------------------------------------- |
-| `image`            | String | True     |          | Image reference to patch                              |
-| `image-report`     | String | True     |          | Trivy JSON vulnerability report of the image to patch |
-| `patched-tag`      | String | True     |          | Patched image tag                                     |
-| `timeout`          | String | False    | `5m`     | Timeout for `copa patch`                              |
-| `buildkit-version` | String | False    | `latest` | Buildkit version                                      |
-| `copa-version`     | String | False    | `latest` | Copa version                                          |
+| Name               | Type   | Required | Default   | Description                                            |
+| ------------------ | ------ | -------- | --------- | ------------------------------------------------------ |
+| `image`            | String | True     |           | Image reference to patch                               |
+| `image-report`     | String | True     |           | Trivy JSON vulnerability report of the image to patch  |
+| `patched-tag`      | String | True     |           | Patched image tag                                      |
+| `timeout`          | String | False    | `5m`      | Timeout for `copa patch`                               |
+| `buildkit-version` | String | False    | `latest`  | Buildkit version                                       |
+| `copa-version`     | String | False    | `latest`  | Copa version                                           |
+| `output`           | String | False    |           | Output filename (available with copa v0.5.0 and later) |
+| `format`           | String | False    | `openvex` | Output format (available with copa v0.5.0 and later)   |
 
 ## Outputs
 
