@@ -28,3 +28,8 @@ else
     echo "Error patching image $image with copa"
     exit 1
 fi
+
+if [ -e "$output_file" ]
+then
+    sudo chmod 444 ./data/"$output_file"
+fi
