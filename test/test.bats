@@ -2,10 +2,6 @@
 
 load helpers
 
-teardown_file() {
-    docker stop buildkitd
-}
-
 @test "Check patched image exists" {
     docker images
     id=$(docker images --quiet 'nginx:1.21.6-patched')
