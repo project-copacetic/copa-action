@@ -22,6 +22,7 @@ inputs:
     description: "Copa version to use"
   output:
     description: "Output filename"
+    default: "output.json"
   format:
     description: "Output format"
     default: "openvex"
@@ -32,14 +33,6 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: docker run buildkitd
-      shell: bash
-      run: |
-        if [ -z "${{ inputs.buildkit-version }}" ]; then
-          docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:latest --addr tcp://0.0.0.0:8888
-        else
-          docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:${{ inputs.buildkit-version }} --addr tcp://0.0.0.0:8888
-        fi
     - name: docker run copa-action
       id: copa-action
       shell: bash
@@ -50,4 +43,10 @@ runs:
         else
           version="${{ inputs.copa-version }}"
         fi
-        docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action "ghcr.io/project-copacetic/copa-action:v$version" ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }} ${{ inputs.timeout }} ${{ inputs.output }} ${{ inputs.format }}
+
+        if [ -z "${{ inputs.buildkit-version }}" ]; then
+          docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source="/var/run/docker.sock",target="/var/run/docker.sock" --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action "ashnam/copa-action:test" ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }} ${{ inputs.timeout }} ${{ inputs.output }} ${{ inputs.format }}
+        else
+          docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:${{ inputs.buildkit-version }} --addr tcp://0.0.0.0:8888
+          docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source="/var/run/docker.sock",target="/var/run/docker.sock" --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action "ashnam/copa-action:test" ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }} ${{ inputs.timeout }} ${{ inputs.output }} ${{ inputs.format }} ${{ inputs.buildkit-version }}
+        fi
