@@ -29,9 +29,3 @@ else
     exit 1
 fi
 
-# due to docker, file permissions are set as 400
-# set output file permissions so user can read it
-if [ ! -z "$output_file" ]
-then
-    chmod 444 ./data/"$output_file"
-fi
