@@ -58,6 +58,7 @@ Example:
 ```
 
 Then, supply the resulting socket path (`$SOCKET`) as the input `custom-socket` for the Copa Action to connect to.
+**Note: Copa Action will load the image to the default docker context, not the "setup-docker-action" context.**
 
 ### Option 3: Buildkit in a container
 To connect via buildkit in a container, provide the input `buildkit-version`. Copa Action will create a buildkit container with that version to connect to. 
