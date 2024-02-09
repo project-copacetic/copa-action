@@ -52,8 +52,8 @@ runs:
         connection="buildx"
 
         # check for other methods of connection
-        if [ -n "{{ inputs.custom-socket}}"]; then
-          socket=${{ inputs.custom-socket }}"
+        if [ -n "{{ inputs.custom-socket }}"]; then
+          socket="${{ inputs.custom-socket }}"
           connection="custom-socket"
         elif [ -n "${{ inputs.buildkit-version }}" ]; then
           docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:${{ inputs.buildkit-version }} --addr tcp://0.0.0.0:8888
