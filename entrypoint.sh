@@ -22,20 +22,20 @@ else
     output="--format $format --output ./data/"$output_file""
 fi
 
-# check selected method of connection
+# check selected method of buildkit connection
 case "$connection_format" in
-    # through a buildx instance (allows for patching private images)
+    # through a buildx instance
     "buildx")
         docker buildx create --name=copa-action
         docker buildx use --default copa-action
         connection="--addr buildx://copa-action"
         ;;
-    # through a running buildkit container
+    # through a running buildkit container over tcp
     "buildkit-container")
         connection="--addr tcp://127.0.0.1:8888"
         ;;
-    # none specified = through default docker buildkit endpoint (allows for patching local and private images)
-    *)
+    # through the default docker buildkit endpoint enabled with a custom socket
+    "custom-socket")
         connection=""
         ;;
 esac
