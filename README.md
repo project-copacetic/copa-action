@@ -28,7 +28,7 @@ Copacetic Action is supported with Copa version 0.3.0 and later.
 | `patched-image` | String | Image reference of the patched image |
 
 ## Ways to connect to Buildkit
-*Custom Buildkit connection to patch local or private images is only available with Copa-Action versions 0.6.1 and later. For all earlier Copa-Action versions, Buildkit in a container is the default approach.*
+*Custom Buildkit connection to patch local or private images is only available with Copa-Action versions 0.6.1 and later. For all earlier Copa-Action versions, Buildkit in a container is the default approach, and a version must be supplied as input.*
 
 ### Option 1: Connect to buildx instance (default)
 By default, Copa Action creates its own Buildx instance to connect to for patching public and private images.
