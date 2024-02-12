@@ -71,7 +71,7 @@ jobs:
             --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
             --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT \
             --name=copa-action-buildx \
-            copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched' '10m' 'output.json' 'openvex' 'buildx'
+            copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched' '10m' 'buildx' 'output.json' 'openvex'
           bats --print-output-on-failure ./test/test.bats
 
       - name: Bats Test - Buildkit Container
@@ -82,7 +82,7 @@ jobs:
             --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
             --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT \
             --name=copa-action-buildkit \
-            copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched' '10m' 'output.json' 'openvex' 'buildkit-container'
+            copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched' '10m' 'buildkit-container' 'output.json' 'openvex'
           bats --print-output-on-failure ./test/test.bats
 
       - name: Bats Test - Custom Socket
@@ -92,5 +92,5 @@ jobs:
             --mount=type=bind,source="$SOCKET",target=/var/run/docker.sock \
             --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT \
             --name=copa-action-custom-socket \
-            copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched' '10m' 'output.json' 'openvex' 'custom-socket'
+            copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched' '10m' 'custom-socket' 'output.json' 'openvex'
           bats --print-output-on-failure ./test/test.bats
