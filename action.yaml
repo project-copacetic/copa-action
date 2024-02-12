@@ -22,7 +22,6 @@ inputs:
     description: "Copa version to use"
   output:
     description: "Output filename"
-    default: "output.json"
   format:
     description: "Output format"
     default: "openvex"
@@ -61,4 +60,4 @@ runs:
         fi
         
         # run copa-action based on inputs
-        docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source="$socket",target="/var/run/docker.sock" --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action "ghcr.io/project-copacetic/copa-action:v$version" ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }} ${{ inputs.timeout }} ${{ inputs.output }} ${{ inputs.format }} "$connection"
+        docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source="$socket",target="/var/run/docker.sock" --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action "ghcr.io/project-copacetic/copa-action:v$version" ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }} ${{ inputs.timeout }}  "$connection" ${{ inputs.format }} {{ inputs.output }}

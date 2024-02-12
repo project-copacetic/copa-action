@@ -6,10 +6,9 @@ image=$1
 report=$2
 patched_tag=$3
 timeout=$4
-output_file=$5
+connection_format=$5
 format=$6
-connection_format=$7
-
+output_file=$7 
 
 # parse image into image name
 image_no_tag=$(echo "$image" | cut -d':' -f1)
@@ -19,7 +18,7 @@ if [ -z "$output_file" ]
 then
     output=""
 else
-    output="--format $format --output ./data/"$output_file""
+    output="--format $format --output ./data/$output_file"
 fi
 
 # check selected method of buildkit connection
@@ -49,3 +48,5 @@ else
     echo "Error patching image $image with copa"
     exit 1
 fi
+
+docker images
