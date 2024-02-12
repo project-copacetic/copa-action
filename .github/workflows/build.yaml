@@ -18,6 +18,25 @@ jobs:
       - name: Check out code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
+      - name: Set up Docker
+        uses: crazy-max/ghaction-setup-docker@v3
+        with:
+          daemon-config: |
+              {
+              "debug": true,
+              "experimental": true,
+                  "features": {
+                  "containerd-snapshotter": true
+                  }
+              }
+
+      - name: Get socket path
+        run: |
+            url=$(docker context inspect | jq -r .[0].Endpoints.docker.Host)
+            socket_path=$(echo "$url" | awk -F// '{print $2}')
+            echo "$socket_path"
+            echo "SOCKET=$socket_path" >> $GITHUB_ENV
+
       - name: Install Trivy
         run: |
             curl -fsSL -o trivy.tar.gz https://github.com/aquasecurity/trivy/releases/download/v${{ env.TRIVY_VERSION }}/trivy_${{ env.TRIVY_VERSION }}_Linux-64bit.tar.gz
@@ -41,14 +60,37 @@ jobs:
             tar -zxvf copa.tar.gz
             cp copa /usr/local/bin/
 
-      - name: Bats Test
+      - name: Build Copa Action Image
         run: |
           docker build --build-arg copa_version=${COPA_VERSION} -t copa-action .
+
+      - name: Bats Test - Buildx
+        run: |
           docker run --net=host \
             --mount=type=bind,source=/tmp,target=/data \
             --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
             --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT \
-            --name=copa-action \
+            --name=copa-action-buildx \
             copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched' '10m' 'output.json' 'openvex' 'buildx'
-          docker images
+          bats --print-output-on-failure ./test/test.bats
+
+      - name: Bats Test - Buildkit Container
+        run: |
+          docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:v${{ env.BUILDKIT_VERSION }} --addr tcp://0.0.0.0:8888
+          docker run --net=host \
+            --mount=type=bind,source=/tmp,target=/data \
+            --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
+            --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT \
+            --name=copa-action-buildkit \
+            copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched' '10m' 'output.json' 'openvex' 'buildkit-container'
+          bats --print-output-on-failure ./test/test.bats
+
+      - name: Bats Test - Custom Socket
+        run: |
+          docker run --net=host \
+            --mount=type=bind,source=/tmp,target=/data \
+            --mount=type=bind,source="$SOCKET",target=/var/run/docker.sock \
+            --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT \
+            --name=copa-action-custom-socket \
+            copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched' '10m' 'output.json' 'openvex' 'custom-socket'
           bats --print-output-on-failure ./test/test.bats
