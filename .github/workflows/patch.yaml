@@ -20,7 +20,7 @@ jobs:
       matrix:
         # provide relevant list of images to scan on each run
         images:
-          - "docker.io/library/nginx:1.21.6"
+          - "docker.io/library/alpine:3.18.4"
           - "docker.io/openpolicyagent/opa:0.46.0"
           - "docker.io/library/hello-world:latest"
     steps:
