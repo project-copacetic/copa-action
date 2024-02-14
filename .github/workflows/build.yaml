@@ -80,6 +80,5 @@ jobs:
             --name=copa-action \
             copa-action 'docker.io/openpolicyagent/opa:0.46.0' 'opa.0.46.0.json' '0.46.0-patched' '10m' "${{ matrix.test-type }}" 'openvex' 'output.json'
           
-          docker images
-
+          docker -c "setup-docker-action" save -o patched.tar openpolicyagent/opa:0.46.0-patched
           bats --print-output-on-failure ./test/test.bats
