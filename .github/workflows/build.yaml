@@ -66,10 +66,12 @@ jobs:
         run: |
           set -ex
           export SOCKET="/var/run/docker.sock"
+          export CONTEXT="default"
 
           if [ "${{ matrix.test-type }}" = "custom-socket" ]; then
             url=$(docker context inspect | jq -r .[0].Endpoints.docker.Host)
             SOCKET=$(echo "$url" | awk -F// '{print $2}')
+            CONTEXT="setup-docker-action"
           fi
 
           docker build --build-arg copa_version=${COPA_VERSION} -t copa-action .
@@ -80,5 +82,6 @@ jobs:
             --name=copa-action \
             copa-action 'docker.io/openpolicyagent/opa:0.46.0' 'opa.0.46.0.json' '0.46.0-patched' '10m' "${{ matrix.test-type }}" 'openvex' 'output.json'
           
-          docker -c "setup-docker-action" save -o patched.tar openpolicyagent/opa:0.46.0-patched
+          docker -c "$CONTEXT" save -o patched.tar openpolicyagent/opa:0.46.0-patched
+            
           bats --print-output-on-failure ./test/test.bats
