@@ -4,7 +4,8 @@ load helpers
 
 @test "Check patched image exists" {
     docker images
-    id=$(docker images --quiet 'nginx:1.21.6-patched')
+    id=$(docker images --quiet 'openpolicyagent/opa:0.46.0-patched')
+    docker pull openpolicyagent/opa:0.46.0-patched
     assert_not_equal "$id" ""
 }
 
@@ -14,8 +15,9 @@ load helpers
 }
 
 @test "Run trivy on patched image" {
-    run trivy image --exit-code 1 --vuln-type os --ignore-unfixed -f json -o nginx.1.21.6-patched.json 'docker.io/library/nginx:1.21.6-patched'
+    docker context use "setup-docker-action"
+    run trivy image --exit-code 1 --vuln-type os --ignore-unfixed -f json -o opa.0.46.0-patched.json 'docker.io/openpolicyagent/opa:0.46.0-patched'
     [ "$status" -eq 0 ]
-    vulns=$(jq 'if .Results then [.Results[] | select(.Class=="os-pkgs" and .Vulnerabilities!=null) | .Vulnerabilities[]] | length else 0 end' nginx.1.21.6-patched.json)
+    vulns=$(jq 'if .Results then [.Results[] | select(.Class=="os-pkgs" and .Vulnerabilities!=null) | .Vulnerabilities[]] | length else 0 end' opa.0.46.0-patched.json)
     assert_equal "$vulns" "0"
 }
