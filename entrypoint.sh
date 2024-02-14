@@ -48,5 +48,3 @@ else
     echo "Error patching image $image with copa"
     exit 1
 fi
-
-docker images
