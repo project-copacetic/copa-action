@@ -20,7 +20,8 @@ Copacetic Action is supported with Copa version 0.3.0 and later.
 | `custom-socket`    | String | False    |           | Custom Docker socket address (available with copa-action v0.6.1 and later) |
 
 > [!NOTE] 
-> Copacetic released version's features do not align with Copa Action versions.
+> Features that are supported with new Copacetic releases will not neccessarily align with what is supported with Copa Action versions. 
+> For example, the `output` file feature was released in Copa v0.5.0, but is supported with Copa Action v0.6.1 and later.
 
 ## Outputs
 
