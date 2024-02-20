@@ -9,6 +9,9 @@ jobs:
   build:
     name: build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test-type: ["buildx", "buildkit-container", "custom-socket"]
     steps:
       - name: Setup BATS
         uses: mig4/setup-bats@af9a00deb21b5d795cabfeaa8d9060410377686d # v1.2.0
@@ -20,13 +23,13 @@ jobs:
 
       - name: Install Trivy
         run: |
-            curl -fsSL -o trivy.tar.gz https://github.com/aquasecurity/trivy/releases/download/v${{ env.TRIVY_VERSION }}/trivy_${{ env.TRIVY_VERSION }}_Linux-64bit.tar.gz
-            tar -zxvf trivy.tar.gz
-            cp trivy /usr/local/bin/
+          curl -fsSL -o trivy.tar.gz https://github.com/aquasecurity/trivy/releases/download/v${{ env.TRIVY_VERSION }}/trivy_${{ env.TRIVY_VERSION }}_Linux-64bit.tar.gz
+          tar -zxvf trivy.tar.gz
+          cp trivy /usr/local/bin/
 
-      - name: Generate trivy vuln report for nginx image
+      - name: Generate trivy vuln report for opa image
         run: |
-          trivy image --vuln-type os --ignore-unfixed -f json -o /tmp/nginx.1.21.6.json docker.io/library/nginx:1.21.6
+          trivy image --vuln-type os --ignore-unfixed -f json -o /tmp/opa.0.46.0.json docker.io/openpolicyagent/opa:0.46.0
 
       - name: Get latest copa version
         run: |
@@ -37,19 +40,49 @@ jobs:
 
       - name: Install Copa
         run: |
-            curl --retry 5 -fsSL -o copa.tar.gz https://github.com/project-copacetic/copacetic/releases/download/v${COPA_VERSION}/copa_${COPA_VERSION}_linux_amd64.tar.gz
-            tar -zxvf copa.tar.gz
-            cp copa /usr/local/bin/
+          curl --retry 5 -fsSL -o copa.tar.gz https://github.com/project-copacetic/copacetic/releases/download/v${COPA_VERSION}/copa_${COPA_VERSION}_linux_amd64.tar.gz
+          tar -zxvf copa.tar.gz
+          cp copa /usr/local/bin/
+
+      - name: Run Buildkit container
+        if: matrix.test-type == 'buildkit-container'
+        run : |
+          docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:v${{ env.BUILDKIT_VERSION }} --addr tcp://0.0.0.0:8888
+
+      - name: Set up Docker
+        if: matrix.test-type == 'custom-socket'
+        uses: crazy-max/ghaction-setup-docker@v3
+        with:
+          daemon-config: |
+            {
+            "debug": true,
+            "experimental": true,
+                "features": {
+                "containerd-snapshotter": true
+                }
+            }
 
       - name: Bats Test
         run: |
-          docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:v${{ env.BUILDKIT_VERSION }} --addr tcp://0.0.0.0:8888
+          set -ex
+          export SOCKET="/var/run/docker.sock"
+          export CONTEXT="default"
+
+          if [ "${{ matrix.test-type }}" = "custom-socket" ]; then
+            url=$(docker context inspect | jq -r .[0].Endpoints.docker.Host)
+            SOCKET=$(echo "$url" | awk -F// '{print $2}')
+            CONTEXT="setup-docker-action"
+          fi
+
           docker build --build-arg copa_version=${COPA_VERSION} -t copa-action .
           docker run --net=host \
             --mount=type=bind,source=/tmp,target=/data \
-            --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
+            --mount=type=bind,source="$SOCKET",target=/var/run/docker.sock \
             --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT \
             --name=copa-action \
-            copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched' '10m' 'output.json' 'openvex'
-          docker images
+            copa-action 'docker.io/openpolicyagent/opa:0.46.0' 'opa.0.46.0.json' '0.46.0-patched' '10m' "${{ matrix.test-type }}" 'openvex' 'output.json'
+          
+          # saving patched image to give trivy access when using a custom socket
+          docker -c "$CONTEXT" save -o patched.tar openpolicyagent/opa:0.46.0-patched
+            
           bats --print-output-on-failure ./test/test.bats

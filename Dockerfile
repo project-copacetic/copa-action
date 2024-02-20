@@ -20,7 +20,7 @@ RUN apt-get update && \
     tee /etc/apt/sources.list.d/docker.list > /dev/null && \
     # Install Docker
     apt-get update && \
-    apt-get install -y docker-ce docker-ce-cli containerd.io --no-install-recommends
+    apt-get install -y docker-ce docker-ce-cli docker-buildx-plugin containerd.io --no-install-recommends
 
 # Install Copa
 RUN curl --retry 5 -fsSL -o copa.tar.gz https://github.com/project-copacetic/copacetic/releases/download/v${copa_version}/copa_${copa_version}_linux_amd64.tar.gz && \
