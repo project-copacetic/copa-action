@@ -17,7 +17,7 @@ Copacetic Action is supported with Copa version 0.3.0 and later.
 | `copa-version`     | String | False    | `latest`  | Copa version                                                                          |
 | `output`           | String | False    |           | Output filename (available using copa-action with copa v0.6.1 and later)              |
 | `format`           | String | False    | `openvex` | Output format (available using copa-action with copa v0.6.1 and later)                |
-| `custom-socket`    | String | False    |           | Custom Docker socket address (available using copa-action with copa v0.6.1 and later) | 
+| `custom-socket`    | String | False    |           | Custom Docker socket address (available using copa-action with copa v0.6.1 and later) |
 
 > [!NOTE] 
 > Features that are supported with new Copacetic releases will not neccessarily align with what is supported with Copa Action. 
