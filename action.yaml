@@ -51,13 +51,13 @@ runs:
         connection="buildx"
 
         # check for other methods of connection
-        if [ -n "{{ inputs.custom-socket }}"]; then
+        if [ ! -z "${{ inputs.custom-socket }}" ]; then
           socket="${{ inputs.custom-socket }}"
           connection="custom-socket"
-        elif [ -n "${{ inputs.buildkit-version }}" ]; then
+        elif [ ! -z "${{ inputs.buildkit-version }}" ]; then
           docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:${{ inputs.buildkit-version }} --addr tcp://0.0.0.0:8888
           connection="buildkit-container"
         fi
-        
+
         # run copa-action based on inputs
-        docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source="$socket",target="/var/run/docker.sock" --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action "ghcr.io/project-copacetic/copa-action:v$version" ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }} ${{ inputs.timeout }}  "$connection" ${{ inputs.format }} {{ inputs.output }}
+        docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source="$socket",target="/var/run/docker.sock" --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action "ghcr.io/project-copacetic/copa-action:v$version" ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }} ${{ inputs.timeout }} ${connection} ${{ inputs.format }} ${{ inputs.output }}

@@ -6,7 +6,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG copa_version
 
 # Copies your code file from your action repository to the filesystem path `/` of the container
-COPY entrypoint.sh /entrypoint.sh 
+COPY entrypoint.sh /entrypoint.sh
 
 # Install required packages
 RUN apt-get update && \
