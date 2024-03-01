@@ -1,4 +1,4 @@
-#!/bin/sh 
+#!/bin/sh
 
 set -ex;
 
@@ -8,7 +8,7 @@ patched_tag=$3
 timeout=$4
 connection_format=$5
 format=$6
-output_file=$7 
+output_file=$7
 
 # parse image into image name
 image_no_tag=$(echo "$image" | cut -d':' -f1)
@@ -28,15 +28,15 @@ case "$connection_format" in
         docker buildx create --name=copa-action
         docker buildx use --default copa-action
         connection="--addr buildx://copa-action"
-        ;;
+    ;;
     # through a running buildkit container over tcp
     "buildkit-container")
         connection="--addr tcp://127.0.0.1:8888"
-        ;;
+    ;;
     # through the default docker buildkit endpoint enabled with a custom socket
     "custom-socket")
         connection=""
-        ;;
+    ;;
 esac
 
 # run copa to patch image
