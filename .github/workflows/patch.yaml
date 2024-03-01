@@ -56,8 +56,12 @@ jobs:
           image: ${{ matrix.images }}
           image-report: "report.json"
           patched-tag: "patched"
-          # buildkit-version: "v0.12.4" # optional, default is latest
+          timeout: "5m" # optional, default is 5m
+          output: vex.json # optional
+          format: "openvex" # optional, default is openvex
           # copa-version: "0.6.0" # optional, default is latest
+          # buildkit-version: "v0.12.4" # optional, default is latest
+          # custom-socket: "/var/run/buildkit/buildkitd.sock" # optional, used for custom socket address
 
         # see https://github.com/docker/login-action#usage for other registries
       - name: Login to GHCR
