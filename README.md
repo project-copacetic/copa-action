@@ -19,8 +19,8 @@ Copacetic Action is supported with Copa version 0.3.0 and later.
 | `format`           | String | False    | `openvex` | Output format (available using copa-action with copa v0.6.1 and later)                |
 | `custom-socket`    | String | False    |           | Custom Docker socket address (available using copa-action with copa v0.6.1 and later) |
 
-> [!NOTE] 
-> Features that are supported with new Copacetic releases will not neccessarily align with what is supported with Copa Action. 
+> [!NOTE]
+> Features that are supported with new Copacetic releases will not neccessarily align with what is supported with Copa Action.
 > For example, the `output` file feature was released in Copa v0.5.0, but is supported with Copa Action when using Copa version v0.6.1 and later.
 
 ## Outputs
@@ -30,7 +30,7 @@ Copacetic Action is supported with Copa version 0.3.0 and later.
 | `patched-image` | String | Image reference of the patched image |
 
 ## Ways to connect to Buildkit
-> [!NOTE] 
+> [!NOTE]
 Custom Buildkit connection to patch local or private images is only available with Copa-Action versions 0.6.1 and later. For all earlier Copa-Action versions, Buildkit in a container is the default approach, and a version must be supplied as input.
 
 ### Option 1: Connect to buildx instance (default)
@@ -61,11 +61,11 @@ Example:
 ```
 
 Then, supply the resulting socket path (`$SOCKET`) as the input `custom-socket` for the Copa Action to connect to.
-> [!NOTE] 
+> [!NOTE]
 > Copa Action will load the image to the default docker context, not the "setup-docker-action" context.
 
 ### Option 3: Buildkit in a container
-To connect via buildkit in a container, provide the input `buildkit-version`. Copa Action will create a buildkit container with that version to connect to. 
+To connect via buildkit in a container, provide the input `buildkit-version`. Copa Action will create a buildkit container with that version to connect to.
 > [!NOTE]
 > This approach does not allow for patching of local or private images.
 
@@ -74,4 +74,4 @@ Refer to [Copacetic documentation](https://project-copacetic.github.io/copacetic
 
 ## Example usage
 
-https://github.com/project-copacetic/copa-action/blob/941743581b0da5e581ca5a575f9316228c2f6c00/.github/workflows/patch.yaml#L1-L77
+https://github.com/project-copacetic/copa-action/blob/00f0ef529529d7a7d49a1f3b9f5f5cf54ba2235e/.github/workflows/patch.yaml#L1-L81
