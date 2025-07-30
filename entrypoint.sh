@@ -41,7 +41,7 @@ case "$connection_format" in
 esac
 
 patch_image() {
-    if copa patch -i "$image" -r ./data/"$report" -t "$patched_tag" "$connection" --timeout "$timeout" "$output"
+if copa patch -i "$image" -r ./data/"$report" -t "$patched_tag" $connection --timeout $timeout $output
     then
         patched_image="$image_no_tag:$patched_tag"
         echo "patched-image=$patched_image" >> "$GITHUB_OUTPUT"
