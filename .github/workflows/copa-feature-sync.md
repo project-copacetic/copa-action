@@ -4,6 +4,8 @@ on:
   schedule:
     - cron: "0 6 * * *"
   workflow_dispatch:
+  pull_request:
+    types: [labeled]
   discussion:
     types: [labeled]
 permissions:
@@ -136,9 +138,10 @@ Add or update feature entries under `releases[tag_name].features` so each includ
 2. Sort all releases chronologically (oldest first, starting from v0.6.0)
 3. Find the FIRST release where `releases[tag_name].discussion_url` does not exist in the state file
 4. **If ALL releases already have discussions**: emit `noop` with message "All releases up to vX.Y.Z have discussions" and EXIT
-5. For the target release, analyze what features need to be added to copa-action
-6. Create a discussion with title `Copa Feature Sync - <tag>` (e.g., `Copa Feature Sync - v0.6.0`)
-7. **STOP IMMEDIATELY** after creating the discussion - do NOT proceed to Phase 2
+5. **DUPLICATE CHECK (IMPORTANT)**: Before creating a discussion, search GitHub discussions for an existing discussion with title "Copa Feature Sync - <tag>". If one already exists, update the state file with its URL and emit `noop` - do NOT create a duplicate.
+6. For the target release, analyze what features need to be added to copa-action
+7. Create a discussion with title `Copa Feature Sync - <tag>` (e.g., `Copa Feature Sync - v0.6.0`)
+8. **STOP IMMEDIATELY** after creating the discussion - do NOT proceed to Phase 2
 
 **Discussion Body Must Include**:
 - **Release Overview**: Tag, date, link to release notes
